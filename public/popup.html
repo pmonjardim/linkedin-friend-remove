@@ -1,0 +1,281 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LinkedIn Connection Manager</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 400px;
+      min-height: 500px;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #0077B5 0%, #005582 100%);
+      color: #333;
+    }
+
+    .header {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 20px;
+      text-align: center;
+      border-bottom: 1px solid rgba(0, 119, 181, 0.1);
+    }
+
+    .header h1 {
+      color: #0077B5;
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+
+    .header p {
+      color: #666;
+      font-size: 13px;
+    }
+
+    .content {
+      background: white;
+      flex: 1;
+      padding: 20px;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .status {
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .status.info {
+      background: #e3f2fd;
+      color: #1976d2;
+      border: 1px solid #bbdefb;
+    }
+
+    .status.warning {
+      background: #fff3e0;
+      color: #f57c00;
+      border: 1px solid #ffcc02;
+    }
+
+    .status.success {
+      background: #e8f5e8;
+      color: #2e7d32;
+      border: 1px solid #a5d6a7;
+    }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 12px 16px;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #0077B5, #005582);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 119, 181, 0.3);
+    }
+
+    .btn-secondary {
+      background: #f5f5f5;
+      color: #666;
+      border: 1px solid #ddd;
+    }
+
+    .btn-secondary:hover {
+      background: #e0e0e0;
+    }
+
+    .btn-danger {
+      background: linear-gradient(135deg, #d32f2f, #b71c1c);
+      color: white;
+    }
+
+    .btn-danger:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(211, 47, 47, 0.3);
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: none !important;
+    }
+
+    .connections-list {
+      max-height: 250px;
+      overflow-y: auto;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+    }
+
+    .connection-item {
+      display: flex;
+      align-items: center;
+      padding: 12px 16px;
+      border-bottom: 1px solid #f0f0f0;
+      transition: background 0.2s ease;
+    }
+
+    .connection-item:hover {
+      background: #f8f9fa;
+    }
+
+    .connection-item:last-child {
+      border-bottom: none;
+    }
+
+    .connection-checkbox {
+      margin-right: 12px;
+      transform: scale(1.1);
+    }
+
+    .connection-info {
+      flex: 1;
+    }
+
+    .connection-name {
+      font-weight: 500;
+      color: #333;
+      font-size: 14px;
+      margin-bottom: 2px;
+    }
+
+    .connection-title {
+      color: #666;
+      font-size: 12px;
+    }
+
+    .progress-bar {
+      background: #e0e0e0;
+      border-radius: 10px;
+      height: 6px;
+      margin: 15px 0;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      background: linear-gradient(90deg, #0077B5, #00a0dc);
+      height: 100%;
+      transition: width 0.3s ease;
+      border-radius: 10px;
+    }
+
+    .stats {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #666;
+      margin-top: 10px;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: #666;
+    }
+
+    .empty-state svg {
+      width: 48px;
+      height: 48px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+
+    .loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .spinner {
+      width: 20px;
+      height: 20px;
+      border: 2px solid #e0e0e0;
+      border-top: 2px solid #0077B5;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Connection Manager</h1>
+    <p>Manage your LinkedIn connections efficiently</p>
+  </div>
+
+  <div class="content">
+    <div id="status" class="status info">
+      Navigate to LinkedIn connections page to get started
+    </div>
+
+    <div class="controls">
+      <button id="scanBtn" class="btn btn-primary">Scan Connections</button>
+      <button id="selectAllBtn" class="btn btn-secondary" disabled>Select All</button>
+    </div>
+
+    <div id="connectionsList" class="connections-list" style="display: none;">
+      <!-- Connections will be populated here -->
+    </div>
+
+    <div id="emptyState" class="empty-state">
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <path d="M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2zM4 18v-4h3v4h2v-7.5c0-.83.67-1.5 1.5-1.5S12 9.67 12 10.5V11h2.5v7h2v-7H20v-2h-3.5V8.5c0-1.38-1.12-2.5-2.5-2.5S11.5 7.12 11.5 8.5V9H9V7.5C9 6.67 8.33 6 7.5 6S6 6.67 6 7.5V18H4z"/>
+      </svg>
+      <p>Click "Scan Connections" to load your LinkedIn connections</p>
+    </div>
+
+    <div id="progressSection" style="display: none;">
+      <div class="progress-bar">
+        <div id="progressFill" class="progress-fill" style="width: 0%"></div>
+      </div>
+      <div class="stats">
+        <span id="progressText">0 of 0 processed</span>
+        <span id="selectedCount">0 selected</span>
+      </div>
+    </div>
+
+    <div class="controls" style="margin-top: 20px;">
+      <button id="removeSelectedBtn" class="btn btn-danger" disabled>Remove Selected</button>
+      <button id="removeAllBtn" class="btn btn-danger" disabled>Remove All</button>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

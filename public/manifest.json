@@ -1,0 +1,30 @@
+
+{
+  "manifest_version": 3,
+  "name": "LinkedIn Connection Manager",
+  "version": "1.0.0",
+  "description": "Efficiently manage and remove LinkedIn connections in bulk",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage"
+  ],
+  "host_permissions": [
+    "https://*.linkedin.com/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "LinkedIn Connection Manager"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://*.linkedin.com/*"],
+      "js": ["content.js"]
+    }
+  ],
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  }
+}
