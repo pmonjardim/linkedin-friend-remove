@@ -1,11 +1,12 @@
+
 import { Download, Users, Shield, Zap, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import JSZip from "jszip";
 
 const Index = () => {
-  const handleDownloadPlugin = () => {
-    // Create a zip file with all plugin files
+  const handleDownloadPlugin = async () => {
+    // Create the manifest and other files
     const files = [
       { name: 'manifest.json', content: JSON.stringify({
         "manifest_version": 3,
@@ -716,22 +717,45 @@ function highlightConnections() {
 }` }
     ];
 
-    // Create and download zip file
+    // Create a downloadable ZIP file instead of CRX format
+    // CRX files require signing and are complex to generate
+    // ZIP format allows manual installation via "Load unpacked" option
     const zip = new JSZip();
+    
+    // Add all extension files
     files.forEach(file => {
       zip.file(file.name, file.content);
     });
 
-    zip.generateAsync({ type: 'blob' }).then(content => {
+    // Create simple icon files (base64 encoded PNG data for basic icons)
+    const iconData = 'iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAAdgAAAHYBTnsmCAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAANCSURBVFiFtZddaFxFFMd/Z+7d3U2yH03SpGlqbWprtVqltaJWfVCwIooiPvhQH/RBX/RBfPBBfRER30QQfRARRcUHwQcRfLBWqbVaq1Zr/WhNm6ZNk2ySbLK7d+fOzPHhJrthk92k/l/uzPzP/5z/mTlzZoT/eUlE1onIShHpFZEOEWkVkWYRaRCRehGpE5FaEakRkWoRqRKRShGpEJFyESkTkVIRKRGRYhEpEpFCEckXkTwRyRWRHBHJFpEsEckUkQwRSRcRLSJaRJSIKBFRIqJEREVEAKBqbW1tC/v6+vr27t37xtDQ0Kt79+59qa+v7/m+vr4X+vr6nu3r63u6r6/vqb6+vif7+vqe6Ovre7yvr++xvr6+R/v6+h7p6+t7uK+v76G+vr4H+/r6Hujr67u/r6/vvr6+vnv7+vru6evru7uvr++uvr6+O/v6+u7o6+u7va+v77a+vr5b+/r6bu7r67upr6/vxr6+vhv6+vqu7+vru66vr+/avr6+a/r6+q7u6+u7qq+v78q+vr4r+vr6Lu/r67usr6/v0r6+vkv6+vou7uvru6ivr+/Cvr6+C/r6+s7v6+s7r6+v79y+vr5z+vr6zu7r6zu7r6/vrL6+vrP6+vrO7OvrO6Ovr++Mvr6+0/v6+k7r6+s7ta+v79S+vr5T+vr6Tu7r6zu5r6/vpL6+vpP6+vpO7OvrO6Gvr+/4vr6+4/v6+o7r6+s7tq+v79i+vr5j+vr6junr6zum';
+    
+    zip.file('icon16.png', iconData, {base64: true});
+    zip.file('icon48.png', iconData, {base64: true});
+    zip.file('icon128.png', iconData, {base64: true});
+
+    try {
+      const content = await zip.generateAsync({ 
+        type: 'blob',
+        compression: 'DEFLATE',
+        compressionOptions: {
+          level: 9
+        }
+      });
+
       const url = URL.createObjectURL(content);
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'linkedin-connection-manager.zip';
+      a.download = 'linkedin-connection-manager-extension.zip';
+      a.style.display = 'none';
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
-    });
+    } catch (error) {
+      console.error('Erro ao gerar arquivo:', error);
+      alert('Erro ao gerar o arquivo. Tente novamente.');
+    }
   };
 
   return (
