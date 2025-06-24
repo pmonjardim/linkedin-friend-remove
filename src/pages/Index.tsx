@@ -1,7 +1,7 @@
-
 import { Download, Users, Shield, Zap, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import JSZip from "jszip";
 
 const Index = () => {
   const handleDownloadPlugin = () => {
@@ -950,3 +950,5 @@ function highlightConnections() {
 };
 
 export default Index;
+
+</edits_to_apply>
