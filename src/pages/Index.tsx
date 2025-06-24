@@ -950,5 +950,3 @@ function highlightConnections() {
 };
 
 export default Index;
-
-</edits_to_apply>
