@@ -1350,6 +1350,24 @@ updatePageIndicators();` }
           </div>
         </div>
       </section>
+
+      {/* Footer */}
+      <footer className="py-8 px-4 bg-background border-t">
+        <div className="container mx-auto text-center">
+          <p className="text-sm text-muted-foreground">
+            © 2025 Atlândida All Rights Reserved. Paulo Américo Monjardim (
+            <a 
+              href="https://linkedin.com/in/paulomonjardim" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-primary hover:underline"
+            >
+              PAIM
+            </a>
+            )
+          </p>
+        </div>
+      </footer>
     </div>
   );
 };
