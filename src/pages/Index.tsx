@@ -1060,54 +1060,54 @@ updatePageIndicators();` }
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <section className="relative py-20 px-4 overflow-hidden">
+      <section className="relative py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-hero opacity-10"></div>
-        <div className="container mx-auto max-w-6xl relative z-10">
+        <div className="container mx-auto max-w-7xl relative z-10">
           <div className="text-center animate-slide-up">
-            <div className="inline-flex items-center gap-2 bg-accent/20 text-accent-foreground px-4 py-2 rounded-full text-sm font-semibold mb-6 animate-glow">
-              <Crown className="h-4 w-4" />
+            <div className="inline-flex items-center gap-2 bg-accent/20 text-accent-foreground px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-semibold mb-4 sm:mb-6 animate-glow">
+              <Crown className="h-3 w-3 sm:h-4 sm:w-4" />
               Versão Premium • Recursos Exclusivos
             </div>
-            <h1 className="text-5xl md:text-7xl font-bold bg-gradient-primary bg-clip-text text-transparent mb-6 leading-tight">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold bg-gradient-primary bg-clip-text text-transparent mb-4 sm:mb-6 leading-tight px-2">
               LinkedIn Connection
               <br />
               <span className="text-accent">Manager Pro</span>
             </h1>
-            <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed">
-              Transforme sua rede profissional com <strong>inteligência artificial avançada</strong>. 
+            <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-muted-foreground mb-6 sm:mb-8 max-w-4xl mx-auto leading-relaxed px-4">
+              Transforme sua rede profissional com <strong className="text-primary">inteligência artificial avançada</strong>. 
               Otimize conexões, maximize oportunidades e acelere seu crescimento profissional.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center mb-8 sm:mb-12 px-4">
               <Button 
                 size="lg" 
-                className="bg-gradient-primary hover:shadow-premium text-lg px-8 py-6 rounded-xl transition-all duration-300 hover:scale-105"
+                className="w-full sm:w-auto bg-gradient-primary hover:shadow-premium text-base sm:text-lg px-6 sm:px-8 py-4 sm:py-6 rounded-xl transition-all duration-300 hover:scale-105 min-h-[48px]"
                 onClick={handleDownloadPlugin}
               >
-                <Download className="mr-2 h-5 w-5" />
+                <Download className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
                 Baixar Extensão Pro
               </Button>
               <Button 
                 variant="outline" 
                 size="lg"
-                className="text-lg px-8 py-6 rounded-xl border-2 hover:bg-primary/5 transition-all duration-300"
+                className="w-full sm:w-auto text-base sm:text-lg px-6 sm:px-8 py-4 sm:py-6 rounded-xl border-2 hover:bg-primary/5 transition-all duration-300 min-h-[48px]"
               >
-                <Play className="mr-2 h-5 w-5" />
+                <Play className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
                 Ver Demo
               </Button>
             </div>
             
             {/* Social Proof */}
-            <div className="flex flex-wrap justify-center items-center gap-8 text-muted-foreground text-sm">
+            <div className="flex flex-col sm:flex-row flex-wrap justify-center items-center gap-4 sm:gap-6 lg:gap-8 text-muted-foreground text-xs sm:text-sm px-4">
               <div className="flex items-center gap-2">
-                <Users className="h-4 w-4 text-primary" />
+                <Users className="h-3 w-3 sm:h-4 sm:w-4 text-primary flex-shrink-0" />
                 <span><strong>50.000+</strong> profissionais ativos</span>
               </div>
               <div className="flex items-center gap-2">
-                <Star className="h-4 w-4 text-accent fill-current" />
+                <Star className="h-3 w-3 sm:h-4 sm:w-4 text-accent fill-current flex-shrink-0" />
                 <span><strong>4.9/5</strong> avaliação média</span>
               </div>
               <div className="flex items-center gap-2">
-                <TrendingUp className="h-4 w-4 text-primary" />
+                <TrendingUp className="h-3 w-3 sm:h-4 sm:w-4 text-primary flex-shrink-0" />
                 <span><strong>+300%</strong> crescimento médio</span>
               </div>
             </div>
@@ -1116,30 +1116,30 @@ updatePageIndicators();` }
       </section>
 
       {/* Features Section */}
-      <section className="py-20 px-4 bg-muted/30">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+      <section className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 bg-muted/30">
+        <div className="container mx-auto max-w-7xl">
+          <div className="text-center mb-12 sm:mb-16">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6 px-4">
               Recursos que <span className="text-primary">Transformam</span> Carreiras
             </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+            <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-4xl mx-auto px-4">
               Tecnologia de ponta desenvolvida especificamente para profissionais que levam networking a sério
             </p>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
             {features.map((feature, index) => (
               <Card 
                 key={index} 
-                className="p-6 hover:shadow-card transition-all duration-300 hover:scale-105 animate-float border-2 hover:border-primary/20"
+                className="p-4 sm:p-6 hover:shadow-card transition-all duration-300 hover:scale-105 animate-float border-2 hover:border-primary/20 bg-card"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
                 <CardContent className="p-0">
-                  <div className="text-primary mb-4 transform hover:scale-110 transition-transform duration-300">
+                  <div className="text-primary mb-3 sm:mb-4 transform hover:scale-110 transition-transform duration-300 flex justify-center md:justify-start">
                     {feature.icon}
                   </div>
-                  <h3 className="text-xl font-bold mb-3 text-card-foreground">{feature.title}</h3>
-                  <p className="text-muted-foreground leading-relaxed">{feature.description}</p>
+                  <h3 className="text-lg sm:text-xl font-bold mb-2 sm:mb-3 text-card-foreground text-center md:text-left">{feature.title}</h3>
+                  <p className="text-sm sm:text-base text-muted-foreground leading-relaxed text-center md:text-left">{feature.description}</p>
                 </CardContent>
               </Card>
             ))}
@@ -1148,35 +1148,35 @@ updatePageIndicators();` }
       </section>
 
       {/* Testimonials */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+      <section className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8">
+        <div className="container mx-auto max-w-7xl">
+          <div className="text-center mb-12 sm:mb-16">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6 px-4">
               Resultados <span className="text-accent">Comprovados</span>
             </h2>
-            <p className="text-xl text-muted-foreground">Veja o que nossos usuários premium estão conquistando</p>
+            <p className="text-base sm:text-lg md:text-xl text-muted-foreground px-4">Veja o que nossos usuários premium estão conquistando</p>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
             {testimonials.map((testimonial, index) => (
               <Card 
                 key={index} 
-                className="p-6 hover:shadow-premium transition-all duration-300 hover:scale-105 bg-gradient-card"
+                className="p-4 sm:p-6 hover:shadow-premium transition-all duration-300 hover:scale-105 bg-gradient-card"
               >
                 <CardContent className="p-0">
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="w-12 h-12 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold text-lg">
+                  <div className="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold text-sm sm:text-lg flex-shrink-0">
                       {testimonial.avatar}
                     </div>
-                    <div>
-                      <h4 className="font-bold text-card-foreground">{testimonial.name}</h4>
-                      <p className="text-sm text-muted-foreground">{testimonial.role}</p>
+                    <div className="min-w-0">
+                      <h4 className="font-bold text-card-foreground text-sm sm:text-base truncate">{testimonial.name}</h4>
+                      <p className="text-xs sm:text-sm text-muted-foreground truncate">{testimonial.role}</p>
                     </div>
                   </div>
-                  <p className="text-muted-foreground italic leading-relaxed">"{testimonial.content}"</p>
-                  <div className="flex text-accent mt-3">
+                  <p className="text-sm sm:text-base text-muted-foreground italic leading-relaxed mb-3">"{testimonial.content}"</p>
+                  <div className="flex text-accent">
                     {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="h-4 w-4 fill-current" />
+                      <Star key={i} className="h-3 w-3 sm:h-4 sm:w-4 fill-current" />
                     ))}
                   </div>
                 </CardContent>
@@ -1187,54 +1187,54 @@ updatePageIndicators();` }
       </section>
 
       {/* Pricing Section */}
-      <section className="py-20 px-4 bg-muted/30">
-        <div className="container mx-auto max-w-4xl">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+      <section className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 bg-muted/30">
+        <div className="container mx-auto max-w-5xl">
+          <div className="text-center mb-12 sm:mb-16">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6 px-4">
               Invista no Seu <span className="text-primary">Futuro Profissional</span>
             </h2>
-            <p className="text-xl text-muted-foreground">
+            <p className="text-base sm:text-lg md:text-xl text-muted-foreground px-4">
               Menos de R$ 1,00 por dia para revolucionar sua carreira
             </p>
           </div>
           
-          <Card className="relative p-8 bg-gradient-hero text-white overflow-hidden hover:shadow-premium transition-all duration-300 border-4 border-accent">
-            <div className="absolute top-4 right-4 bg-accent text-accent-foreground px-3 py-1 rounded-full text-sm font-bold animate-pulse">
+          <Card className="relative p-4 sm:p-6 lg:p-8 bg-gradient-hero text-white overflow-hidden hover:shadow-premium transition-all duration-300 border-4 border-accent">
+            <div className="absolute top-3 right-3 sm:top-4 sm:right-4 bg-accent text-accent-foreground px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-bold animate-pulse">
               🔥 MAIS POPULAR
             </div>
             
-            <CardHeader className="text-center p-0 mb-8">
-              <div className="flex items-center justify-center gap-2 mb-4">
-                <Crown className="h-8 w-8 text-accent" />
-                <CardTitle className="text-3xl font-bold">LinkedIn Manager Pro</CardTitle>
+            <CardHeader className="text-center p-0 mb-6 sm:mb-8">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-2 mb-3 sm:mb-4">
+                <Crown className="h-6 w-6 sm:h-8 sm:w-8 text-accent" />
+                <CardTitle className="text-xl sm:text-2xl lg:text-3xl font-bold">LinkedIn Manager Pro</CardTitle>
               </div>
               <div className="text-center">
-                <div className="text-6xl font-bold mb-2">
-                  R$ 29<span className="text-2xl">/mês</span>
+                <div className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-2">
+                  R$ 29<span className="text-lg sm:text-xl lg:text-2xl">/mês</span>
                 </div>
-                <p className="text-white/80">Cancele quando quiser • Primeira semana grátis</p>
+                <p className="text-white/80 text-sm sm:text-base">Cancele quando quiser • Primeira semana grátis</p>
               </div>
             </CardHeader>
             
             <CardContent className="p-0">
-              <div className="grid md:grid-cols-2 gap-6 mb-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 lg:gap-6 mb-6 sm:mb-8">
                 {pricingFeatures.map((feature, index) => (
-                  <div key={index} className="flex items-center gap-3">
-                    <CheckCircle className="h-5 w-5 text-accent flex-shrink-0" />
-                    <span className="text-white/90">{feature}</span>
+                  <div key={index} className="flex items-center gap-2 sm:gap-3">
+                    <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 text-accent flex-shrink-0" />
+                    <span className="text-white/90 text-sm sm:text-base">{feature}</span>
                   </div>
                 ))}
               </div>
               
-              <div className="text-center space-y-4">
+              <div className="text-center space-y-3 sm:space-y-4">
                 <Button 
                   size="lg" 
-                  className="w-full bg-accent text-accent-foreground hover:bg-accent/90 text-xl py-6 rounded-xl font-bold hover:scale-105 transition-all duration-300 shadow-glow"
+                  className="w-full bg-accent text-accent-foreground hover:bg-accent/90 text-lg sm:text-xl py-4 sm:py-6 rounded-xl font-bold hover:scale-105 transition-all duration-300 shadow-glow min-h-[48px]"
                 >
-                  <Rocket className="mr-2 h-6 w-6" />
+                  <Rocket className="mr-2 h-5 w-5 sm:h-6 sm:w-6" />
                   Começar Teste Grátis Agora
                 </Button>
-                <p className="text-white/70 text-sm">
+                <p className="text-white/70 text-xs sm:text-sm px-4">
                   💳 Sem compromisso • ⚡ Ativação instantânea • 🔒 100% seguro
                 </p>
               </div>
