@@ -690,33 +690,72 @@ const Index = () => {
     // Ordena por score de IA
     const sortedConnections = this.connections.sort((a, b) => (b.aiScore || 0) - (a.aiScore || 0));
     
-    this.connectionsList.innerHTML = sortedConnections
-      .map(connection => \`
-        <div class="connection-item" style="border-left: 4px solid \${this.getRelevanceColor(connection.relevance)};">
-          <input 
-            type="checkbox" 
-            class="connection-checkbox" 
-            data-id="\${connection.id}"
-            onchange="manager.toggleConnection(\${connection.id})"
-          >
-          <div class="connection-info">
-            <div class="connection-name">
-              \${this.escapeHtml(connection.name)}
-              <span style="font-size: 10px; color: \${this.getRecommendationColor(connection.recommendation)}; font-weight: 700; margin-left: 8px;">
-                \${connection.recommendation}
-              </span>
-            </div>
-            <div class="connection-title">\${this.escapeHtml(connection.title)}</div>
-            <div style="font-size: 11px; color: #6c757d; margin-top: 4px;">
-              📊 Score: \${Math.round(connection.aiScore || 0)} | 
-              🕒 \${connection.lastInteraction} | 
-              👥 \${connection.mutualConnections} mútuos
-            </div>
-          </div>
-        </div>
-      \`).join('');
+    // Clear existing content securely
+    this.connectionsList.textContent = '';
+    
+    // Create connection items using secure DOM methods
+    sortedConnections.forEach(connection => {
+      const connectionItem = this.createSecureConnectionElement(connection);
+      this.connectionsList.appendChild(connectionItem);
+    });
 
     this.updateSelectedCount();
+  }
+
+  // Create connection element securely using DOM methods
+  createSecureConnectionElement(connection) {
+    const connectionDiv = document.createElement('div');
+    connectionDiv.className = 'connection-item';
+    connectionDiv.style.borderLeft = \`4px solid \${this.getRelevanceColor(connection.relevance)}\`;
+    
+    // Create checkbox
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.className = 'connection-checkbox';
+    checkbox.dataset.id = connection.id;
+    
+    // Use secure event listener instead of inline handler
+    checkbox.addEventListener('change', () => this.toggleConnection(connection.id));
+    
+    // Create info container
+    const infoDiv = document.createElement('div');
+    infoDiv.className = 'connection-info';
+    
+    // Create name container
+    const nameDiv = document.createElement('div');
+    nameDiv.className = 'connection-name';
+    nameDiv.textContent = this.sanitizeText(connection.name); // Safe - uses textContent
+    
+    // Create recommendation span
+    const recommendationSpan = document.createElement('span');
+    recommendationSpan.style.fontSize = '10px';
+    recommendationSpan.style.color = this.getRecommendationColor(connection.recommendation);
+    recommendationSpan.style.fontWeight = '700';
+    recommendationSpan.style.marginLeft = '8px';
+    recommendationSpan.textContent = connection.recommendation;
+    nameDiv.appendChild(recommendationSpan);
+    
+    // Create title element  
+    const titleDiv = document.createElement('div');
+    titleDiv.className = 'connection-title';
+    titleDiv.textContent = this.sanitizeText(connection.title); // Safe - uses textContent
+    
+    // Create stats element
+    const statsDiv = document.createElement('div');
+    statsDiv.style.fontSize = '11px';
+    statsDiv.style.color = '#6c757d';
+    statsDiv.style.marginTop = '4px';
+    statsDiv.textContent = \`📊 Score: \${Math.round(connection.aiScore || 0)} | 🕒 \${connection.lastInteraction} | 👥 \${connection.mutualConnections} mútuos\`;
+    
+    // Assemble elements
+    infoDiv.appendChild(nameDiv);
+    infoDiv.appendChild(titleDiv);
+    infoDiv.appendChild(statsDiv);
+    
+    connectionDiv.appendChild(checkbox);
+    connectionDiv.appendChild(infoDiv);
+    
+    return connectionDiv;
   }
 
   getRelevanceColor(relevance) {
@@ -835,11 +874,26 @@ const Index = () => {
     this.statusEl.className = \`status \${type}\`;
   }
 
-  escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-  }
+      // Enhanced security: Sanitize text content
+      sanitizeText(text) {
+        if (typeof text !== 'string') return '';
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.textContent || div.innerText || '';
+      }
+
+      // Validate connection data
+      validateConnection(connection) {
+        if (!connection || typeof connection !== 'object') return false;
+        if (!connection.name || typeof connection.name !== 'string') return false;
+        if (!connection.title || typeof connection.title !== 'string') return false;
+        if (typeof connection.id !== 'number') return false;
+        
+        // Length validation
+        if (connection.name.length > 200 || connection.title.length > 500) return false;
+        
+        return true;
+      }
 }
 
 // Inicializa o gerenciador

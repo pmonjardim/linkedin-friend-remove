@@ -1,12 +1,20 @@
-
-// Content script for LinkedIn Connection Manager
+// Content script for LinkedIn Connection Manager - Security Hardened
 console.log('LinkedIn Connection Manager content script loaded');
 
-// Input validation functions
-function validateConnectionId(id) {
-  return typeof id === 'number' && id >= 0 && Number.isInteger(id);
-}
+// Listen for messages from the popup
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.action === 'scanConnections') {
+    const connections = scanConnections();
+    sendResponse({ connections });
+  } else if (request.action === 'removeConnection') {
+    removeConnection(request.connectionId).then(result => {
+      sendResponse({ success: result });
+    });
+  }
+  return true; // Keep message channel open for async response
+});
 
+// Input validation and sanitization
 function validateAndSanitizeText(text, maxLength = 200) {
   if (typeof text !== 'string') return '';
   
@@ -18,41 +26,9 @@ function validateAndSanitizeText(text, maxLength = 200) {
   return sanitized.slice(0, maxLength).trim();
 }
 
-// Listen for messages from the popup
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  // Validate message structure
-  if (!request || typeof request !== 'object') {
-    sendResponse({ error: 'Invalid request' });
-    return false;
-  }
-
-  if (request.action === 'scanConnections') {
-    try {
-      const connections = scanConnections();
-      sendResponse({ connections });
-    } catch (error) {
-      console.error('Scan error:', error);
-      sendResponse({ error: 'Scan failed' });
-    }
-  } else if (request.action === 'removeConnection') {
-    // Validate connection ID
-    if (!validateConnectionId(request.connectionId)) {
-      sendResponse({ error: 'Invalid connection ID' });
-      return false;
-    }
-    
-    removeConnection(request.connectionId).then(result => {
-      sendResponse({ success: result });
-    }).catch(error => {
-      console.error('Remove error:', error);
-      sendResponse({ error: 'Remove failed' });
-    });
-  } else {
-    sendResponse({ error: 'Unknown action' });
-    return false;
-  }
-  return true; // Keep message channel open for async response
-});
+function validateConnectionId(id) {
+  return typeof id === 'number' && id >= 0 && Number.isInteger(id);
+}
 
 function scanConnections() {
   const connections = [];
@@ -70,15 +46,22 @@ function scanConnections() {
   
   // Try each selector until we find elements
   for (const selector of selectors) {
-    connectionElements = document.querySelectorAll(selector);
-    if (connectionElements.length > 0) {
-      console.log(`Found ${connectionElements.length} connections using selector: ${selector}`);
-      break;
+    try {
+      connectionElements = document.querySelectorAll(selector);
+      if (connectionElements.length > 0) {
+        console.log(`Found ${connectionElements.length} connections using selector: ${selector}`);
+        break;
+      }
+    } catch (error) {
+      console.error(`Error with selector ${selector}:`, error);
     }
   }
 
   connectionElements.forEach((element, index) => {
     try {
+      // Validate element
+      if (!element || !element.querySelector) return;
+      
       // Try multiple selectors for name
       const nameEl = element.querySelector('span[aria-hidden="true"]') || 
                    element.querySelector('.actor-name') ||
@@ -98,9 +81,9 @@ function scanConnections() {
                        element.querySelector('button[data-control-name="remove_connection"]') ||
                        element.querySelector('button[aria-label*="Disconnect"]');
 
-      if (nameEl) {
-        const rawName = nameEl.textContent?.trim() || '';
-        const rawTitle = titleEl ? titleEl.textContent?.trim() || '' : 'No title available';
+      if (nameEl && nameEl.textContent) {
+        const rawName = nameEl.textContent;
+        const rawTitle = titleEl ? titleEl.textContent : 'No title available';
         
         // Validate and sanitize data
         const name = validateAndSanitizeText(rawName, 200);
@@ -123,17 +106,30 @@ function scanConnections() {
     }
   });
 
-  console.log(`Scanned ${connections.length} connections`);
+  console.log(`Scanned ${connections.length} valid connections`);
   return connections;
 }
 
 async function removeConnection(connectionId) {
   return new Promise((resolve) => {
     try {
+      // Validate connection ID
+      if (!validateConnectionId(connectionId)) {
+        console.error('Invalid connection ID:', connectionId);
+        resolve(false);
+        return;
+      }
+      
       // Find connection elements again (they might have changed)
       const connectionElements = document.querySelectorAll(
         '.mn-connection-card, [data-test-id="connection-card"], .search-result__info, .reusable-search__result-container'
       );
+      
+      if (connectionId >= connectionElements.length) {
+        console.error(`Connection ID ${connectionId} out of range`);
+        resolve(false);
+        return;
+      }
       
       const targetElement = connectionElements[connectionId];
       
@@ -161,13 +157,23 @@ async function removeConnection(connectionId) {
       // Wait for confirmation dialog and handle it
       setTimeout(() => {
         try {
-          // Look for confirmation dialog buttons
-          const confirmBtn = document.querySelector('button[data-control-name="remove_connection_confirm"]') ||
-                           document.querySelector('.artdeco-modal__confirm-dialog-btn') ||
-                           document.querySelector('button[aria-label*="Remove"]') ||
-                           document.querySelector('.artdeco-modal .artdeco-button--primary');
+          // Look for confirmation dialog buttons with better validation
+          const confirmBtns = document.querySelectorAll(
+            'button[data-control-name="remove_connection_confirm"], ' +
+            '.artdeco-modal__confirm-dialog-btn, ' +
+            'button[aria-label*="Remove"], ' +
+            '.artdeco-modal .artdeco-button--primary'
+          );
 
-          if (confirmBtn && confirmBtn.textContent.toLowerCase().includes('remove')) {
+          let confirmBtn = null;
+          for (const btn of confirmBtns) {
+            if (btn.textContent && btn.textContent.toLowerCase().includes('remove')) {
+              confirmBtn = btn;
+              break;
+            }
+          }
+
+          if (confirmBtn) {
             confirmBtn.click();
             console.log(`Confirmed removal for connection ${connectionId}`);
             
@@ -192,27 +198,48 @@ async function removeConnection(connectionId) {
   });
 }
 
-// Helper function to wait for elements to load
+// Helper function to wait for elements to load (with better error handling)
 function waitForElement(selector, timeout = 5000) {
   return new Promise((resolve, reject) => {
-    const element = document.querySelector(selector);
-    if (element) {
-      resolve(element);
+    // Validate selector
+    if (typeof selector !== 'string' || selector.length === 0) {
+      reject(new Error('Invalid selector'));
+      return;
+    }
+    
+    try {
+      const element = document.querySelector(selector);
+      if (element) {
+        resolve(element);
+        return;
+      }
+    } catch (error) {
+      reject(new Error(`Invalid CSS selector: ${selector}`));
       return;
     }
 
     const observer = new MutationObserver(() => {
-      const element = document.querySelector(selector);
-      if (element) {
+      try {
+        const element = document.querySelector(selector);
+        if (element) {
+          observer.disconnect();
+          resolve(element);
+        }
+      } catch (error) {
         observer.disconnect();
-        resolve(element);
+        reject(new Error(`Error finding element: ${error.message}`));
       }
     });
 
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true
-    });
+    try {
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true
+      });
+    } catch (error) {
+      reject(new Error(`Failed to observe DOM: ${error.message}`));
+      return;
+    }
 
     setTimeout(() => {
       observer.disconnect();
