@@ -482,7 +482,7 @@ const Index = () => {
     <div class="upgrade-cta">
       <h4>💎 Versão Premium Ativa</h4>
       <p>Aproveite todos os recursos avançados para maximizar sua rede profissional!</p>
-      <button class="upgrade-btn" onclick="window.open('https://your-website.com/premium', '_blank')">
+      <button id="manageSubscriptionBtn" class="upgrade-btn">
         Gerenciar Assinatura
       </button>
     </div>
@@ -491,7 +491,7 @@ const Index = () => {
   <script src="popup.js"></script>
 </body>
 </html>` },
-      { name: 'popup.js', content: `class LinkedInConnectionManagerPro {
+        { name: 'popup.js', content: `class LinkedInConnectionManagerPro {
   constructor() {
     this.connections = [];
     this.selectedConnections = new Set();
@@ -523,6 +523,14 @@ const Index = () => {
     this.selectAllBtn.addEventListener('click', () => this.toggleSelectAll());
     this.removeSelectedBtn.addEventListener('click', () => this.removeSelectedWithConfirmation());
     this.removeAllBtn.addEventListener('click', () => this.removeAllWithConfirmation());
+    
+    // Secure event listener for manage subscription button
+    const manageBtn = document.getElementById('manageSubscriptionBtn');
+    if (manageBtn) {
+      manageBtn.addEventListener('click', () => {
+        window.open('https://your-website.com/premium', '_blank', 'noopener,noreferrer');
+      });
+    }
   }
 
   showPremiumFeatures() {
