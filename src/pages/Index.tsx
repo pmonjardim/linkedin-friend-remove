@@ -1,9 +1,20 @@
-import { Download, Users, Shield, Zap, CheckCircle, Star, Trophy, Rocket, Clock, Target, ArrowRight, Play, Crown, TrendingUp, BarChart3, Globe } from "lucide-react";
+import { Download, Users, Shield, Zap, CheckCircle, Star, Trophy, Rocket, Clock, Target, ArrowRight, Play, Crown, TrendingUp, BarChart3, Globe, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useAuth } from "@/hooks/useAuth";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 import JSZip from "jszip";
 
 const Index = () => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user) {
+      navigate('/dashboard');
+    }
+  }, [user, navigate]);
   const handleDownloadPlugin = async () => {
     // Create the manifest and other files
     const files = [
@@ -1283,10 +1294,11 @@ updatePageIndicators();` }
               <div className="text-center space-y-3 sm:space-y-4">
                 <Button 
                   size="lg" 
+                  onClick={() => navigate('/auth')}
                   className="w-full bg-accent text-accent-foreground hover:bg-accent/90 text-lg sm:text-xl py-4 sm:py-6 rounded-xl font-bold hover:scale-105 transition-all duration-300 shadow-glow min-h-[48px]"
                 >
-                  <Rocket className="mr-2 h-5 w-5 sm:h-6 sm:w-6" />
-                  Começar Teste Grátis Agora
+                  <LogIn className="mr-2 h-5 w-5 sm:h-6 sm:w-6" />
+                  Entrar na Plataforma
                 </Button>
                 <p className="text-white/70 text-xs sm:text-sm px-4">
                   💳 Sem compromisso • ⚡ Ativação instantânea • 🔒 100% seguro
